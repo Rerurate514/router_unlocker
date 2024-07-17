@@ -20,8 +20,8 @@ class BlutoForceController{
   final HttpController _httpController = HttpController();
   final HeadrCreater _headrCreater = HeadrCreater();
 
-  Stream<Res> run() async*{
-    List<String> combinations = await generateCombinations(1);
+  Stream<Res> run(int length) async*{
+    List<String> combinations = await generateCombinations(length);
 
     for(String nameCom in combinations){
       for(String passCom in combinations){
