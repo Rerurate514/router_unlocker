@@ -11,12 +11,12 @@ class HttpController{
 }
 
 class HeadrCreater{
-  final String URL = "http://192.168.0.1/";
+  final String URL = "192.168.0.1";
 
   Uri getHeader(Base64Controller base64){
     var req = Uri.http(
       URL, 
-      "", 
+      "/", 
       { 
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 
         'Accept-Encoding': 'gzip, deflate', 
