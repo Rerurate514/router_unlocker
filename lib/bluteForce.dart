@@ -1,43 +1,50 @@
 import 'dart:async';
 
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:router_unlocker/httpController.dart';
 
 class Res{
   final Response response;
+  final int statusCode;
+  final String body;
   final String name;
   final String password;
 
   const Res({
     required this.response,
     required this.name,
-    required this.password
+    required this.password,
+    this.statusCode = 500,
+    this.body = ""
   });
 }
 
 class BlutoForceController{
   final HttpController _httpController = HttpController();
-  final HeadrCreater _headrCreater = HeadrCreater();
 
   Stream<Res> run(int length) async*{
     List<String> combinations = await generateCombinations(length);
 
     for(String nameCom in combinations){
       for(String passCom in combinations){
-        Response response = await runReq(nameCom, passCom);
-        yield Res(response: response, name: nameCom, password: passCom);
+        Res res = await runReq(nameCom, passCom);
+        yield Res(
+          response: res.response, 
+          name: nameCom, 
+          password: passCom,
+          statusCode: res.statusCode,
+          body: res.body
+        );
       }   
     }
   }
 
- Future<Response> runReq(String name, String pass) async {
+ Future<Res> runReq(String name, String pass) async {
     Base64Controller base64 = Base64Controller();
     base64.encodeText(name, pass);
 
-    Uri uri = _headrCreater.getHeader(base64);
-
-    Response response = await _httpController.getHttp(uri);
+    Res response = await _httpController.getHttp(base64);
 
     if(response.statusCode == 200){
       print("Succeed!!! name = $name, pass = $pass");

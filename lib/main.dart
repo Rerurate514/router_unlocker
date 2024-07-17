@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:router_unlocker/bluteForce.dart';
-import 'package:router_unlocker/httpCOntroller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,13 +33,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final HttpController _httpController = HttpController();
-  final HeadrCreater _headrCreater = HeadrCreater();
   final BlutoForceController _blutoForceController = BlutoForceController();
 
   final TextEditingController _controller = TextEditingController();
 
-  Response _response = Response("", 200);
+  Res? _response;
   String _name = "name";
   String _password = "password";
 
@@ -60,11 +57,11 @@ class _MyHomePageState extends State<MyHomePage> {
     
     _blutoForceController.run(len).listen((Res res) {
       setState(() {
-        _response = res.response;
+        _response = res;
         _name = res.name;
         _password = res.password;
 
-        if(_response.statusCode == 200){
+        if(_response?.statusCode == 200){
           _nameSuc = res.name;
           _passwordSuc = res.password;
         }
@@ -118,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 children: [
                   const Text("STATUS CODE"),
-                  Text(_response.statusCode.toString()),
+                  Text(_response?.statusCode.toString() ?? ""),
                 ],
               ),
             ),
@@ -127,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 children: [
                   const Text("応答ヘッダ"),
-                  Text(_response.body)
+                  Text(_response?.body ?? "")
                 ],
               ),
             ),
