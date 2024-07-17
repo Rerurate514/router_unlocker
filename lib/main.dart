@@ -38,6 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final HeadrCreater _headrCreater = HeadrCreater();
   final BlutoForceController _blutoForceController = BlutoForceController();
 
+  final TextEditingController _controller = TextEditingController();
+
   Response _response = Response("", 200);
   String _name = "name";
   String _password = "password";
@@ -53,7 +55,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void sendRequest() async {
-    _blutoForceController.run().listen((Res res) {
+    int len = int.parse(_controller.text);
+    if(len == 0) return;
+    
+    _blutoForceController.run(len).listen((Res res) {
       setState(() {
         _response = res.response;
         _name = res.name;
@@ -100,6 +105,13 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(
               onPressed: buttonTapped, 
               child: const Text("send request")
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 128),
+              child: TextField(
+                controller: _controller,
+                keyboardType: TextInputType.number,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(16),
